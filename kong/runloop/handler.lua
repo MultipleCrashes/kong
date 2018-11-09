@@ -246,6 +246,7 @@ local function balancer_setup_stage1(ctx, scheme, host_type, host, port,
     -- balancer    = nil,       -- the balancer object, if any
     -- hostname    = nil,       -- hostname of the final target IP
     -- hash_cookie = nil,       -- if Upstream sets hash_on_cookie
+    -- balancer_handle = nil,   -- balancer handle for the current connection
   }
 
   -- TODO: this is probably not optimal
@@ -951,6 +952,8 @@ return {
         else
           balancer_data.balancer.report_http_status(ip, port, status)
         end
+        -- release the handle, so the balancer can update its statistics
+        balancer_data.balancer_handle:release()
       end
     end
   }
